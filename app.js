@@ -57,6 +57,7 @@ client.on('chat', function(channel, user, message, self) {
   }
 });
 
+// Function to loop through the directory and add to an array of list of songs
 var loadSongs = function(dir, filelist) {
   var path = path || require('path');
   var fs = fs || require('fs');
