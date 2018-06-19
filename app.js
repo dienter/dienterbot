@@ -35,17 +35,25 @@ client.on('connected', function(address, port) {
   console.log('Address: ' + address + ' Port: ' + port);
 });
 
+// Every 5 minutes remind people to follow
+setTimeout(followReminder, 600000);
+
+var followReminder = funciton() {
+  client.action('dienterbot', 'Don\'t forget to hit the follow button, it helps me a lot!')
+}
+
 // Respond to specific chat commands
 client.on('chat', function(channel, user, message, self) {
-  if (message === '!twitter') {
-    client.action('dienter', 'twitter.com/dienter2')
-  } else if (message === '!songlist') {
-    console.log('this was a success');
-    list = loadSongs(songFolder);
-    list.sort();
-    console.log(list);
-  } else {
-    //client.action('dienter', user['display-name'] + ' this was a test')
+  switch (message) {
+    case '!twitter':
+      client.action('dienter', 'twitter.com/dienter2');
+    case '!songlist':
+      list = loadSongs(songFolder);
+      list.sort();
+      console.log(list);
+    default:
+      console.log('Message not recognized');
+      //client.action('dienter', user['display-name'] + ' this was a test')
   }
 });
 
