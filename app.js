@@ -2,6 +2,7 @@
 // Twitch library
 var tmi = require('tmi.js');
 var Repeat = require('Repeat');
+require('dotenv').load();
 // filesync
 const fs = require('fs');
 const path = require('path');
@@ -19,8 +20,8 @@ var options = {
     reconnect: true
   },
   identity: {
-    username: 'DienterBot',
-    password: 'oauth:6y3axy6zcmq5tajt31czq0ukireizj'
+    username: process.env.BOT_NAME,
+    password: process.env.BOT_KEY
   },
   channels: ['dienterbot']
 };
@@ -34,21 +35,21 @@ client.connect();
 // Do an action on connect
 client.on('connected', function(address, port) {
   console.log('Address: ' + address + ' Port: ' + port);
-  client.action('dienterbot', 'I am now here');
+  client.action(process.env.COMM_CHANNEL, 'I am now here');
 });
 
 // Every 5 minutes remind people to follow
 Repeat(followReminder).every(20, 'min').start.in(5, 'sec');
 
 function followReminder() {
-  client.action('dienterbot', 'Don\'t forget to hit the follow button, it helps me a lot!')
+  client.action(process.env.COMM_CHANNEL, 'RaccAttack Don\'t forget to hit the follow button, it helps me a lot! RaccAttack')
 }
 
 // Respond to specific chat commands
 client.on('chat', function(channel, user, message, self) {
   switch (message) {
     case '!twitter':
-      client.action('dienterbot', 'twitter.com/dienter2');
+      client.action(process.env.COMM_CHANNEL, 'twitter.com/dienter2');
       break;
     case '!songlist':
       list = loadSongs(songFolder);
