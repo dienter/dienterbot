@@ -6,7 +6,7 @@ require('dotenv').load();
 // filesync
 const fs = require('fs');
 const path = require('path');
-
+const sys = require('sys');
 // Setup the options for the channel connection
 var options = {
   options: {
@@ -20,7 +20,7 @@ var options = {
     username: process.env.BOT_NAME,
     password: process.env.BOT_KEY
   },
-  channels: ['dienterbot']
+  channels: process.env.CHANNEL_LIST.split(',')
 };
 
 // Create a client with the options
@@ -49,14 +49,15 @@ client.on('chat', function(channel, user, message, self) {
       client.action(process.env.COMM_CHANNEL, 'twitter.com/dienter2');
       break;
     case '!songlist':
-      if (process.env.BEAT_SABER_COMMAND_ENABLED) {
+      if (process.env.BEAT_SABER_COMMAND_ENABLED == true) {
         console.log('!songlist is not enabled');
         break;
+      } else {
+        list = loadSongs(process.env.BEAT_SABER_SONG_FOLDER);
+        list.sort();
+        console.log(list);
+        break;
       }
-      list = loadSongs(process.env.BEAT_SABER_SONG_FOLDER);
-      list.sort();
-      console.log(list);
-      break;
     case (message.match(/^!/) || {}).input:
       console.error(message + ' -- Recognized an attempted command that is not created.');
       break;
@@ -79,8 +80,10 @@ var loadSongs = function(dir, filelist) {
       filelist = loadSongs(path.join(dir, file), filelist);
     } else if (path.join(dir, file).indexOf('info.json') > -1) {
       try {
-        var contents = fs.readFileSync(path.join(dir, file));
+        var contents = fs.readFileSync(path.join(dir, file), "utf8");
+        contents = contents.replace(/[^a-z0-9{}:,"@!?#$%&\*()]+/gi, '');
         var jsonContent = JSON.parse(contents);
+
         // If the array doesn't already exist, be sure to create it
         if (!Array.isArray(filelist)) {
           filelist = [];
