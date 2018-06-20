@@ -1,6 +1,7 @@
 // Requires
 // Twitch library
 var tmi = require('tmi.js');
+var Repeat = require('Repeat');
 // filesync
 const fs = require('fs');
 const path = require('path');
@@ -21,7 +22,7 @@ var options = {
     username: 'DienterBot',
     password: 'oauth:6y3axy6zcmq5tajt31czq0ukireizj'
   },
-  channels: ['Dienter']
+  channels: ['dienterbot']
 };
 
 // Create a client with the options
@@ -33,12 +34,13 @@ client.connect();
 // Do an action on connect
 client.on('connected', function(address, port) {
   console.log('Address: ' + address + ' Port: ' + port);
+  client.action('dienterbot', 'I am now here');
 });
 
 // Every 5 minutes remind people to follow
-setTimeout(followReminder, 600000);
+Repeat(followReminder).every(20, 'min').start.in(5, 'sec');
 
-var followReminder = funciton() {
+function followReminder() {
   client.action('dienterbot', 'Don\'t forget to hit the follow button, it helps me a lot!')
 }
 
@@ -46,11 +48,13 @@ var followReminder = funciton() {
 client.on('chat', function(channel, user, message, self) {
   switch (message) {
     case '!twitter':
-      client.action('dienter', 'twitter.com/dienter2');
+      client.action('dienterbot', 'twitter.com/dienter2');
+      break;
     case '!songlist':
       list = loadSongs(songFolder);
       list.sort();
       console.log(list);
+      break;
     default:
       console.log('Message not recognized');
       //client.action('dienter', user['display-name'] + ' this was a test')
