@@ -10,6 +10,7 @@
   "license": "ISC",
   "dependencies": {
     "dotenv": "^6.0.0",
+    "pastebin-js": "^0.5.1",
     "repeat": "0.0.6",
     "tmi.js": "^1.2.1"
   }
