@@ -50,7 +50,8 @@ client.on('connected', function(address, port) {
 Repeat(clearPastebinLimit).every(1, 'hour').start.in(5, 'sec');
 
 function clearPastebinLimit() {
-  console.log('Clearing the pastebin check to allow upload again.')
+  console.log('Clearing the pastebin check to allow upload again.');
+  
   canUploadToPastebin = true;
 }
 // Every 5 minutes remind people to follow
@@ -143,6 +144,10 @@ var uploadSongList = function(songList) {
     console.error(err);
   });
 };
+
+var writePasteLink = function(file, content){
+  fs.writeFileSync(file,content);
+}
 
 var botSpeakMessage = function(message) {
   client.say(process.env.COMM_CHANNEL, message);
