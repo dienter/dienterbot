@@ -47,11 +47,10 @@ client.on('connected', function(address, port) {
   client.action(process.env.COMM_CHANNEL, 'I am now here');
 });
 
-Repeat(clearPastebinLimit).every(1, 'hour').start.in(5, 'sec');
+Repeat(clearPastebinLimit).every(1, 'hour').start.in(1, 'sec');
 
 function clearPastebinLimit() {
   console.log('Clearing the pastebin check to allow upload again.');
-  
   canUploadToPastebin = true;
 }
 // Every 5 minutes remind people to follow
@@ -78,7 +77,7 @@ client.on('chat', function(channel, user, message, self) {
           list.sort();
           uploadSongList(list);
         } else {
-          botSpeakMessage('Command is still on cooldown - find the most recent song list at ' + process.env.MOST_RECENT_PASTEBIN);
+          botSpeakMessage('Command is still on cooldown - find the most recent song list at ' + getTmpFileContents('beatlist.txt'));
         }
         break;
       }
@@ -137,7 +136,7 @@ var uploadSongList = function(songList) {
     expiration: '1H'
   }).then(function(data) {
     botSpeakMessage('Songlist was generated, you can find it at ' + data);
-    writeRecentBeatSaberLink(data);
+    writeTmpFileContents('beatlist.txt', data);
     canUploadToPastebin = false;
   }).fail(function(err) {
     botSpeakMessage('Something went horribly wrong generating the song list. Try again in a little bit!');
@@ -145,9 +144,18 @@ var uploadSongList = function(songList) {
   });
 };
 
-var writePasteLink = function(file, content){
-  fs.writeFileSync(file,content);
-}
+var writeTmpFileContents = function(file, content){
+  fs.writeFile(file, content, function(err) {
+    if(err) {
+        return console.log(err);
+    }
+    console.log("The file was saved!");
+});
+};
+
+var getTmpFileContents = function(file){
+  return fs.readFileSync((file), "utf8");
+};
 
 var botSpeakMessage = function(message) {
   client.say(process.env.COMM_CHANNEL, message);
