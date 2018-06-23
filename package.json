@@ -1,6 +1,6 @@
 {
   "name": "twitch-bot",
-  "version": "1.0.0",
+  "version": "0.0.1",
   "description": "My first twitch bot!",
   "main": "app.js",
   "scripts": {
@@ -10,6 +10,7 @@
   "license": "ISC",
   "dependencies": {
     "dotenv": "^6.0.0",
+    "hoek": "^4.2.1",
     "pastebin-js": "^0.5.1",
     "repeat": "0.0.6",
     "tmi.js": "^1.2.1"
