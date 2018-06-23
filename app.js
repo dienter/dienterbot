@@ -81,6 +81,10 @@ client.on('chat', function(channel, user, message, self) {
         }
         break;
       }
+    case (message.match(/^!suggest/) || {}).input:
+      writeFileContents('suggestionlist.txt', message, 'append');
+      botSpeakMessage('Added your suggestion to the list of commands. Will review when able!');
+      break;
     case (message.match(/^!/) || {}).input:
       console.error(message + ' -- Recognized an attempted command that is not created.');
       break;
@@ -136,7 +140,7 @@ var uploadSongList = function(songList) {
     expiration: '1H'
   }).then(function(data) {
     botSpeakMessage('Songlist was generated, you can find it at ' + data);
-    writeTmpFileContents('beatlist.txt', data);
+    writeFileContents('beatlist.txt', data, 'new');
     canUploadToPastebin = false;
   }).fail(function(err) {
     botSpeakMessage('Something went horribly wrong generating the song list. Try again in a little bit!');
@@ -144,16 +148,24 @@ var uploadSongList = function(songList) {
   });
 };
 
-var writeTmpFileContents = function(file, content){
-  fs.writeFile(file, content, function(err) {
-    if(err) {
+var writeFileContents = function(file, content, type) {
+  if (type === 'new') {
+    fs.writeFile(file, content, function(err) {
+      if (err) {
         return console.log(err);
-    }
-    console.log("The file was saved!");
-});
+      }
+      console.log("The file was saved!");
+    });
+  }
+  else if(type === 'append') {
+    fs.appendFile(file, content, function (err) {
+      if (err) throw err;
+      console.log('Saved!');
+    });
+  }
 };
 
-var getTmpFileContents = function(file){
+var getTmpFileContents = function(file) {
   return fs.readFileSync((file), "utf8");
 };
 
