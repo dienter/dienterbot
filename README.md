@@ -1,7 +1,7 @@
 # dienterbot
 My Basic Twitch Bot
 
-This bot is used for Twitch channels to be able to customize responses to commands, as well as attempt to keep a list of commands used by people to think about future possibilities. 
+This bot is used for Twitch channels to be able to customize responses to commands, as well as attempt to keep a list of commands used by people to think about future possibilities. Fill in the values of the example environmental file, and rename it to .env.
 
 # Configuration example
 BOT_NAME='<BOT USERNAME>' - username of the desired bot  
